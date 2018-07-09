@@ -12,17 +12,19 @@ app = Flask(__name__)
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 dotenv.load_dotenv(dotenv_path)
 
-verification_token = os.environ['VERIFICATION_TOKEN']
 app_root = os.environ["WEB_ROUTE"]
-emoji_url = os.environ["TEAM_EMOJI_URL"]
+
+# Authentication parameters
+verification_token = os.environ['VERIFICATION_TOKEN']
+oauth_access_token = os.environ["OATUH_ACCESS_TOKEN"]
 
 emoji_url_generator = None
 
 # Very bad way to open a file but who cares it works
 with open(os.path.join(os.path.dirname(__file__), 
-          "config",
-          "emoji_image_locations.json")) as default_file:
-    emoji_url_generator = EmojiUrlGenerator(json.load(default_file), emoji_url)
+                       "config",
+                       "emoji_image_locations.json")) as default_file:
+    emoji_url_generator = EmojiUrlGenerator(json.load(default_file), oauth_access_token)
 
 
 @app.route(app_root + '/produce_party_parrot', methods=['POST'])
@@ -34,7 +36,7 @@ def produce_party_parrot():
     # print(request.form.to_dict())
 
     # Validate the request
-    if (not request_json['text']):
+    if not request_json['text']:
         return abort(400)
 
     original_emoji_name = request_json['text']
