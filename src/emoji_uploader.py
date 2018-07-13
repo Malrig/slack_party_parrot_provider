@@ -1,30 +1,30 @@
-import os
-import re
 import requests
-# /import urllib
-# from PIL import Image
 from io import BytesIO
 from bs4 import BeautifulSoup
+from collections import namedtuple
 
 URL = "https://{team_name}.slack.com/customize/emoji"
 
+EmojiUploadTask = namedtuple('EmojiUploadTask', [
+    "team_name",
+    "team_cookie",
+    "emoji_url",
+    "emoji_name",
+    "notify_url"
+])
 
-class EmojiUploader():
+
+class EmojiUploader:
     def __init__(self,
-                 team_name: str,
-                 team_cookie: str,
-                 emoji_url: str,
-                 emoji_name: str):
-        self.session = self._session(team_name, team_cookie)
-        self.emoji_url = emoji_url
-        self.emoji_name = emoji_name
+                 emoji_upload_task: EmojiUploadTask):
+        self.session = self._session(emoji_upload_task.team_name, emoji_upload_task.team_cookie)
+        self.emoji_url = emoji_upload_task.emoji_url
+        self.emoji_name = emoji_upload_task.emoji_name
 
-    def _session(self,
-                 team_name: str,
-                 team_cookie: str,):
+    def _session(self):
         session = requests.session()
-        session.headers = {"Cookie": team_cookie}
-        session.url = URL.format(team_name=team_name)
+        session.headers = {"Cookie": self.team_cookie}
+        session.url = URL.format(team_name=self.team_name)
         return session
 
     def upload_emoji(self):

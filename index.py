@@ -1,60 +1,47 @@
-from flask import Flask, jsonify, request, make_response, abort
+from flask import Flask, jsonify, request, abort
 import os
 import dotenv
 import json
 
-from src.emoji_uploader import EmojiUploader
-from src.emoji_url_generator import EmojiUrlGenerator
-from src.parrot_url_generator import ParrotUrlGenerator
+from src.utils.slack_team_config import SlackTeamConfig
+from src.party_parrot_provider import PartyParrotProvider
 
 app = Flask(__name__)
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+slack_team_config = SlackTeamConfig(dotenv_path)
+
+default_slack_emoji_mapping = None
+
+# TODO Move these config parameters into a config file instead of unpacking them here
 dotenv.load_dotenv(dotenv_path)
-
-app_root = os.environ["WEB_ROUTE"]
-
-# Authentication parameters
 verification_token = os.environ['VERIFICATION_TOKEN']
-oauth_access_token = os.environ["OATUH_ACCESS_TOKEN"]
-
-emoji_url_generator = None
+app_root = os.environ["WEB_ROUTE"]
 
 # Very bad way to open a file but who cares it works
 with open(os.path.join(os.path.dirname(__file__), 
                        "config",
                        "emoji_image_locations.json")) as default_file:
-    emoji_url_generator = EmojiUrlGenerator(json.load(default_file), oauth_access_token)
+    default_slack_emoji_mapping = json.load(default_file)
 
 
 @app.route(app_root + '/produce_party_parrot', methods=['POST'])
 def produce_party_parrot():
     if request.form['token'] != verification_token:
         return abort(400)
-
     request_json = request.form.to_dict()
-    # print(request.form.to_dict())
 
-    # Validate the request
-    if not request_json['text']:
-        return abort(400)
-
-    original_emoji_name = request_json['text']
-
-    original_emoji_url = emoji_url_generator.get_emoji_url(original_emoji_name)
-
-    parrot_url_generator = ParrotUrlGenerator(original_emoji_url)
-
-    uploader = EmojiUploader(
+    party_parrot_provider = PartyParrotProvider(
+        request_json['text'],
         request_json['team_domain'],
-        os.environ["TEAM_COOKIE"],
-        parrot_url_generator.get_emoji_url(),
-        original_emoji_name.replace(":","") + "_parrot"
+        request_json['response_url'],
+        default_slack_emoji_mapping,
+        slack_team_config
     )
 
-    uploader.upload_emoji()
+    party_parrot_provider.provide_parrot()
 
-    payload = {'text': 'DigitalOcean Slack slash command is successful!'}
+    payload = {'text': 'Your parrot is queued for processing and will be along shortly!'}
 
     return jsonify(payload)
 
