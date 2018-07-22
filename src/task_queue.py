@@ -1,6 +1,6 @@
 from threading import Thread
 import queue
-import time
+import requests
 from src.emoji_uploader import EmojiUploader, EmojiUploadTask
 
 
@@ -23,10 +23,32 @@ class TaskQueue(queue.Queue):
 
     def worker(self):
         while True:
-            emoji_upload_task = self.get()
+            emoji_upload_task = EmojiUploadTask(*self.get())
 
             uploader = EmojiUploader(emoji_upload_task)
 
             uploader.upload_emoji()
+
+            message = "\n:{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      "\nCongratulations, your party parrot may or may not have been uploaded. " \
+                      "\nIf it has then you should be able to begin using it immediately."\
+                      "\n:{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
+                      ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"
+
+            response_data = {
+                'response_type': 'in_channel',
+                'text': message.format(emoji_name=emoji_upload_task.emoji_name)
+            }
+
+            print(emoji_upload_task.notify_url)
+
+            requests.post(emoji_upload_task.notify_url,
+                          json=response_data,
+                          headers={'Content-Type': 'application/json'})
 
             self.task_done()

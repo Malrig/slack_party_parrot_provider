@@ -17,9 +17,11 @@ EmojiUploadTask = namedtuple('EmojiUploadTask', [
 class EmojiUploader:
     def __init__(self,
                  emoji_upload_task: EmojiUploadTask):
-        self.session = self._session(emoji_upload_task.team_name, emoji_upload_task.team_cookie)
         self.emoji_url = emoji_upload_task.emoji_url
         self.emoji_name = emoji_upload_task.emoji_name
+        self.team_cookie = emoji_upload_task.team_cookie
+        self.team_name = emoji_upload_task.team_name
+        self.session = self._session()
 
     def _session(self):
         session = requests.session()

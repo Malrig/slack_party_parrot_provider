@@ -10,9 +10,8 @@ class EmojiUrlGenerator:
                  oauth_token: str):
         self.default_emoji_list = default_emoji_list
         self.oauth_token = oauth_token
-        self.custom_emoji_dict = None
         
-    def _refresh_custom_emoji_dict(self):
+    def _get_custom_emoji_dict(self):
         response = requests.get(EMOJI_API_URL.format(oauth_token=self.oauth_token))
 
         return response.json()["emoji"]
@@ -22,14 +21,14 @@ class EmojiUrlGenerator:
 
         for emoji_obj in self.default_emoji_list:
             if emoji_name in emoji_obj["short_names"]:
-                return BASE_EMOJI_URL.format(emoji_name=self.default_emoji_list["name"].lower()
-                                                                                       .replace(" ", "-"),
-                                             emoji_code=self.default_emoji_list["unified"].lower())
+                return BASE_EMOJI_URL.format(emoji_name=emoji_obj["name"].lower()
+                                                                         .replace(" ", "-"),
+                                             emoji_code=emoji_obj["unified"].lower())
 
         # Only refresh the custom emoji dictionary if it is required.
-        self._refresh_custom_emoji_dict()
+        custom_emoji_dict = self._get_custom_emoji_dict()
 
-        if emoji_name in self.custom_emoji_dict:
-            return self.custom_emoji_dict[emoji_name]
+        if emoji_name in custom_emoji_dict:
+            return custom_emoji_dict[emoji_name]
 
         raise ValueError("No emoji found for {emoji_name}".format(emoji_name=emoji_name)) 

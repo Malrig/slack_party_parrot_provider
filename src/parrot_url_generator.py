@@ -4,7 +4,7 @@ party_parrot_url = ("https://ppaas.herokuapp.com/partyparrot?overlay={image_url}
                     "&overlayHeight={image_size}&overlayOffsetX={x_offset}&overlayOffsetY={y_offset}")
 
 
-class ParrotUrlGenerator():
+class ParrotUrlGenerator:
     def __init__(self,
                  original_emoji_url: str):
         self.original_emoji_url = original_emoji_url
