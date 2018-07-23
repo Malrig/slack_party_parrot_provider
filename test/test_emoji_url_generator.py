@@ -81,16 +81,14 @@ class TestEmojiUrlGenerator(unittest.TestCase):
     def test_basic_emoji(self):
         emoji_url = self.emoji_url_generator.get_emoji_url(":joy:")
 
-        self.assertEqual("https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/119/"
-                         "face-with-tears-of-joy_1f602.png",
+        self.assertEqual("https://unicodey.com/emoji-data/img-google-64/1f602.png",
                          emoji_url)
         self.emoji_url_generator._get_custom_emoji_dict.assert_not_called()
 
     def test_emoji_with_underscores(self):
         emoji_url = self.emoji_url_generator.get_emoji_url(":sweat_smile:")
 
-        self.assertEqual("https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/119/"
-                         "smiling-face-with-open-mouth-and-cold-sweat_1f605.png",
+        self.assertEqual("https://unicodey.com/emoji-data/img-google-64/1f605.png",
                          emoji_url)
         self.emoji_url_generator._get_custom_emoji_dict.assert_not_called()
 

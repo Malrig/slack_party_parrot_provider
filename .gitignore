@@ -523,3 +523,4 @@ target/
 .ipynb_checkpoints
 .env
 Pipfile.lock
+venv/*

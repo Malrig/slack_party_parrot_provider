@@ -1,6 +1,6 @@
 import requests
 
-BASE_EMOJI_URL = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/119/{emoji_name}_{emoji_code}.png"
+BASE_EMOJI_URL = "https://unicodey.com/emoji-data/img-google-64/{image_link}"
 EMOJI_API_URL = "https://slack.com/api/emoji.list?token={oauth_token}"
 
 
@@ -21,9 +21,7 @@ class EmojiUrlGenerator:
 
         for emoji_obj in self.default_emoji_list:
             if emoji_name in emoji_obj["short_names"]:
-                return BASE_EMOJI_URL.format(emoji_name=emoji_obj["name"].lower()
-                                                                         .replace(" ", "-"),
-                                             emoji_code=emoji_obj["unified"].lower())
+                return BASE_EMOJI_URL.format(image_link=emoji_obj["image"])
 
         # Only refresh the custom emoji dictionary if it is required.
         custom_emoji_dict = self._get_custom_emoji_dict()
@@ -31,4 +29,4 @@ class EmojiUrlGenerator:
         if emoji_name in custom_emoji_dict:
             return custom_emoji_dict[emoji_name]
 
-        raise ValueError("No emoji found for {emoji_name}".format(emoji_name=emoji_name)) 
+        raise ValueError("No emoji found for :{emoji_name}:".format(emoji_name=emoji_name))
