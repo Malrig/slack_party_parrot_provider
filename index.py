@@ -21,7 +21,7 @@ app_root = os.environ['WEB_ROUTE']
 
 # Very bad way to open a file but who cares it works
 with open(os.path.join(os.path.dirname(__file__), 
-                       'config',
+                       'data',
                        'emoji_image_locations.json')) as default_file:
     default_slack_emoji_mapping = json.load(default_file)
 
