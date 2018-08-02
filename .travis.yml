@@ -3,7 +3,6 @@ sudo: required
 dist: xenial
 
 python:
-  - "3.5-dev"
   - "3.6"
   - "3.7-dev"
 addons:
@@ -13,9 +12,14 @@ os:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coverage
+  - pip install nose
+  - pip install coveralls
 # command to run tests
 script:
-  - python -m unittest discover
+  - nosetests --with-coverage
+after_success:
+  - coveralls
 
 #before_deploy:
 #  - openssl aes-256-cbc -K $encrypted_79b9bbe312f6_key -iv $encrypted_79b9bbe312f6_iv -in deploy_rsa_2.enc -out /tmp/deploy_rsa -d
