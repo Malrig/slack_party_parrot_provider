@@ -13,11 +13,10 @@ os:
 install:
   - pip install -r requirements.txt
   - pip install coverage
-  - pip install nose
   - pip install coveralls
 # command to run tests
 script:
-  - nosetests --with-coverage
+  - coverage run -m unittest discover
 after_success:
   - coveralls
 
