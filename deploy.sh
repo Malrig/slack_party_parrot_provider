@@ -55,7 +55,7 @@ fi
 
 
 
-ssh -p 22022 $SSH_LOGIN_USERNAME@malrig.homelinuxserver.org << EOF
+ssh -p 22022 $SSH_LOGIN_USERNAME@georgeblackburn.co.uk << EOF
   pwd
   if [[ "$test_deploy" = true ]]; then
     cd /var/WebApps/slack_party_parrot_provider_test/
@@ -64,6 +64,7 @@ ssh -p 22022 $SSH_LOGIN_USERNAME@malrig.homelinuxserver.org << EOF
   fi
   pwd
 
+  git fetch
   git checkout $commit_id
   source slack_party_parrot_provider_env/bin/activate
   pip install -r requirements.txt

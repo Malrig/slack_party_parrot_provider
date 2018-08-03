@@ -4,7 +4,6 @@ dist: xenial
 
 python:
   - "3.6"
-  - "3.7-dev"
 addons:
   ssh_known_hosts: malrig.homelinuxserver.org:22022
 os:
@@ -27,6 +26,7 @@ before_deploy:
   - chmod a+x ./deploy.sh
 deploy:
   provider: script
+  skip_cleanup: true
   script:
     - ./deploy.sh -c $TRAVIS_COMMIT -t
   on:
