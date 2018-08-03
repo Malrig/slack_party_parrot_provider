@@ -5,7 +5,7 @@ dist: xenial
 python:
   - "3.6"
 addons:
-  ssh_known_hosts: malrig.homelinuxserver.org:22022
+  ssh_known_hosts: georgeblackburn.co.uk:22022
 os:
   - linux
 # command to install dependencies
