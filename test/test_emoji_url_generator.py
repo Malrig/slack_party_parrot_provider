@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from src.emoji_url_generator import EmojiUrlGenerator
 
 default_emoji_dict = [
@@ -126,9 +126,7 @@ class TestEmojiUrlGenerator(unittest.TestCase):
         with self.assertRaises(ValueError) as val_err:
             self.emoji_url_generator.get_emoji_url(":emoji_which_doesnt_exist:")
 
-        the_exception = val_err.exception
-
         mock_get.assert_called_with('https://slack.com/api/emoji.list?token=OAUTH_STRING')
         self.assertEqual("No emoji found for :{emoji_name}:".format(emoji_name="emoji_which_doesnt_exist"),
-                         str(the_exception))
+                         str(val_err.exception))
 
