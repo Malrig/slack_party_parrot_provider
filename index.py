@@ -30,7 +30,7 @@ with open(os.path.join(os.path.dirname(__file__),
 def hello_world():
     print("Received command")
     time.sleep(10)
-    payload = {'text': "Your parrot is queued for processing and will be along shortly!"}
+    payload = {'text': "Hello World!"}
 
     return jsonify(payload)
 
