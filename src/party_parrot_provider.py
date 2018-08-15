@@ -1,8 +1,8 @@
 from src.utils.slack_team_config import SlackTeamConfig
-from src.emoji_url_generator import EmojiUrlGenerator
-from src.parrot_url_generator import ParrotUrlGenerator
-from src.emoji_uploader import EmojiUploadTask
-from src.task_queue import TaskQueue
+from src.parrot_provider.emoji_url_generator import EmojiUrlGenerator
+from src.parrot_provider.parrot_url_generator import ParrotUrlGenerator
+from src.parrot_provider.emoji_uploader import EmojiUploadTask
+from src.task_queue.task_queue import TaskQueue
 
 
 class PartyParrotProvider:
@@ -47,6 +47,5 @@ class PartyParrotProvider:
             team_cookie=self.slack_team_config.team_cookie,
             emoji_url=parrot_url,
             emoji_name=self.new_emoji_name,
-            # TODO put the notify URL in here correctly.
             notify_url=self.notify_url
         ))
