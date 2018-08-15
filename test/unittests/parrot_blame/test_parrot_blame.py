@@ -1,6 +1,4 @@
 import unittest
-from unittest.mock import MagicMock
-from src.parrot_blame import ParrotBlame
 
 
 class TestParrotBlame(unittest.TestCase):

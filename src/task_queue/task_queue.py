@@ -1,7 +1,7 @@
 from threading import Thread
 import queue
 import requests
-from src.emoji_uploader import EmojiUploader, EmojiUploadTask
+from src.parrot_provider.emoji_uploader import EmojiUploader, EmojiUploadTask
 
 
 class TaskQueue(queue.Queue):

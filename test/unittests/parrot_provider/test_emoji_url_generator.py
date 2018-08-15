@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from src.emoji_url_generator import EmojiUrlGenerator
+from src.parrot_provider.emoji_url_generator import EmojiUrlGenerator
 
 default_emoji_dict = [
     {

@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/Malrig/slack_party_parrot_provider.svg?branch=master)](https://travis-ci.org/Malrig/slack_party_parrot_provider)
 [![Coverage Status](https://coveralls.io/repos/github/Malrig/slack_party_parrot_provider/badge.svg?branch=master)](https://coveralls.io/github/Malrig/slack_party_parrot_provider?branch=master)
 
-This Slack App allows users t []() o effortlessly add new party parrots from existing emojis using the slash command `/produce_party_parrot {emoji_name}`.
+This Slack App allows users to effortlessly add new party parrots from existing emojis using the slash command `/produce_party_parrot {emoji_name}`.
 
 ## Available Slash Commands / API Endpoints
 
