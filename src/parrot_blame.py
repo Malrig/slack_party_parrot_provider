@@ -1,6 +1,6 @@
 import json
+import os
 from datetime import datetime
-from collections import namedtuple
 
 
 class ParrotBlameInfo:
@@ -39,8 +39,19 @@ class ParrotBlameInfo:
 
 class ParrotBlame:
     def __init__(self,
-                 parrot_blame_filename: str):
-        self.parrot_blame_filename = parrot_blame_filename
+                 data_dir_path: str):
+        self._prepare_blame_file(data_dir_path)
+        self.parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
+
+    @staticmethod
+    def _prepare_blame_file(data_dir_path: str):
+        parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
+
+        if os.path.isfile(parrot_file_path):
+            return
+
+        with open(parrot_file_path, 'w+') as new_json_file:
+            json.dump([], new_json_file)
 
     def add_parrot_blame_information(self,
                                      parrot_name: str,
@@ -72,8 +83,12 @@ class ParrotBlame:
         raise ValueError("The parrot :{parrot_name}: was not found in the blame information.", parrot_name)
 
     def _get_parrot_blame_information(self):
-        print("_get_parrot_blame_information")
+        with open(self.parrot_file_path, 'r') as blame_data:
+            data = json.load(blame_data)
+
+        return data
 
     def _save_parrot_blame_information(self,
                                        parrot_blame_info: list):
-        print("_add_parrot_blame_information")
+        with open(self.parrot_file_path, 'w') as blame_data:
+            json.dump(parrot_blame_info, blame_data)
