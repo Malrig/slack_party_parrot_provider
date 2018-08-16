@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import MagicMock, patch
-from src.parrot_blame import ParrotBlame, ParrotBlameInfo
+from src.parrot_blame.parrot_blame import ParrotBlame, ParrotBlameInfo
 
 mockdate = datetime(2000, 1, 1, 0, 0, 0)
 
@@ -47,9 +47,14 @@ class TestParrotBlameWithFile(unittest.TestCase):
 
 class TestParrotBlameWithoutFile(unittest.TestCase):
     def setUp(self):
+        self.patcher = patch('src.parrot_blame.parrot_blame.ParrotBlame._prepare_blame_file')
+        self.mock_prepare_blame_file = self.patcher.start()
         self.parrot_blame = ParrotBlame("file_path")
         self.parrot_blame._get_parrot_blame_information = MagicMock(return_value=parrot_blame_data)
         self.parrot_blame._save_parrot_blame_information = MagicMock()
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_blame_parrot(self):
         blame_parrot = self.parrot_blame.blame_parrot(":joy_parrot:",
@@ -92,7 +97,6 @@ class TestParrotBlameWithoutFile(unittest.TestCase):
         self.assertEqual("('The parrot :{parrot_name}: was not found in the blame information.', 'joy_parrot')",
                          str(val_err.exception))
 
-    # @patch('src.parrot_blame.datetime.now')
     @freeze_time("2018-08-03")
     def test_create_blame_entry(self):
         self.parrot_blame.add_parrot_blame_information(":tick_parrot:",

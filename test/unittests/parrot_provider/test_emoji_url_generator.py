@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from src.emoji_url_generator import EmojiUrlGenerator
+from src.parrot_provider.emoji_url_generator import EmojiUrlGenerator
 
 default_emoji_dict = [
     {
@@ -92,7 +92,7 @@ def mocked_requests_get(*args, **kwargs):
     return MockResponse(None, 404)
 
 
-@patch('src.emoji_url_generator.requests.get', side_effect=mocked_requests_get)
+@patch('src.parrot_provider.emoji_url_generator.requests.get', side_effect=mocked_requests_get)
 class TestEmojiUrlGenerator(unittest.TestCase):
     def setUp(self):
         self.emoji_url_generator = EmojiUrlGenerator(default_emoji_dict, "OAUTH_STRING")
