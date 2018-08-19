@@ -47,6 +47,8 @@ class ParrotBlame:
     def _prepare_blame_file(data_dir_path: str):
         parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
 
+        os.makedirs(os.path.dirname(parrot_file_path), exist_ok=True)
+
         if os.path.isfile(parrot_file_path):
             return
 

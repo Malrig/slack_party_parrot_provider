@@ -1,4 +1,7 @@
 import unittest
+import os
+import shutil
+import json
 from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import MagicMock, patch
@@ -22,27 +25,122 @@ parrot_blame_data = [
 ]
 
 
-class TestParrotBlameWithFile(unittest.TestCase):
+class TestParrotBlameInitialisation(unittest.TestCase):
     def setUp(self):
-        print("setUp")
+        self.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                     "test_data_dir")
+
+    def tearDown(self):
+        shutil.rmtree(self.data_dir)
 
     def test_initiation_creates_file(self):
-        print("test_initiation_creates_file")
+        parrot_blame = ParrotBlame(self.data_dir)
+
+        assert os.path.exists(self.data_dir) == 1
+        assert parrot_blame._get_parrot_blame_information() == []
 
     def test_initiation_doesnt_override_existing_file(self):
-        print("test_initiation_doesnt_override_existing_file")
+        parrot_file_path = os.path.join(self.data_dir, "parrot_blame.json")
+        os.makedirs(os.path.dirname(parrot_file_path), exist_ok=True)
+        if os.path.isfile(parrot_file_path):
+            return
+
+        with open(parrot_file_path, 'w+') as new_json_file:
+            json.dump(parrot_blame_data, new_json_file)
+
+        ParrotBlame(self.data_dir)
+
+        with open(parrot_file_path, 'r') as blame_data:
+            data = json.load(blame_data)
+            self.assertListEqual(parrot_blame_data, data)
+
+
+class TestParrotBlameWithFile(unittest.TestCase):
+    def setUp(self):
+        self.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                     "test_data_dir")
+        self.parrot_file_path = os.path.join(self.data_dir, "parrot_blame.json")
+        os.makedirs(os.path.dirname(self.parrot_file_path), exist_ok=True)
+        if os.path.isfile(self.parrot_file_path):
+            return
+        with open(self.parrot_file_path, 'w+') as new_json_file:
+            json.dump(parrot_blame_data, new_json_file)
+
+        self.parrot_blame = ParrotBlame(self.data_dir)
+
+    def tearDown(self):
+        shutil.rmtree(self.data_dir)
 
     def test_blame_parrot(self):
-        print("test_blame_parrot")
+        blame_parrot = self.parrot_blame.blame_parrot(":joy_parrot:",
+                                                      "T001")
+
+        self.assertEqual(ParrotBlameInfo("joy_parrot",
+                                         "TestUser",
+                                         datetime.strptime("2018-07-24 20:35:43.687369",
+                                                           "%Y-%m-%d %H:%M:%S.%f"),
+                                         "T001"),
+                         blame_parrot)
+
+    def test_blame_parrot_with_colons(self):
+        blame_parrot = self.parrot_blame.blame_parrot("sweat_smile_parrot",
+                                                      "T003")
+
+        self.assertEqual(ParrotBlameInfo("sweat_smile_parrot",
+                                         "AnotherUser",
+                                         datetime.strptime("2018-07-10 20:35:43.687369",
+                                                           "%Y-%m-%d %H:%M:%S.%f"),
+                                         "T003"),
+                         blame_parrot)
 
     def test_blame_parrot_without_entry(self):
-        print("test_blame_parrot_no_entry")
+        with self.assertRaises(ValueError) as val_err:
+            self.parrot_blame.blame_parrot(":not_like_this_parrot:", "T001")
 
+        self.assertEqual("('The parrot :{parrot_name}: was not found in the blame information.', "
+                         "'not_like_this_parrot')",
+                         str(val_err.exception))
+
+    def test_blame_parrot_without_team(self):
+        with self.assertRaises(ValueError) as val_err:
+            self.parrot_blame.blame_parrot(":joy_parrot:", "T003")
+
+        self.assertEqual("('The parrot :{parrot_name}: was not found in the blame information.', 'joy_parrot')",
+                         str(val_err.exception))
+
+    @freeze_time("2018-08-03")
     def test_create_blame_entry(self):
-        print("test_create_blame_entry")
+        self.parrot_blame.add_parrot_blame_information(":tick_parrot:",
+                                                       "YetAnotherUser",
+                                                       "T005")
 
-    def test_override_blame_entry(self):
-        print("test_override_blame_entry")
+        final_data = [
+            {
+                "parrot_name": "joy_parrot",
+                "username": "TestUser",
+                "created_date": "2018-07-24 20:35:43.687369",
+                "team_id": "T001"
+            },
+            {
+                "parrot_name": "sweat_smile_parrot",
+                "username": "AnotherUser",
+                "created_date": "2018-07-10 20:35:43.687369",
+                "team_id": "T003"
+            },
+            {
+                "parrot_name": "tick_parrot",
+                "username": "YetAnotherUser",
+                "created_date": str(datetime(2018, 8, 3)),
+                "team_id": "T005"
+            }
+        ]
+
+        with open(self.parrot_file_path, 'r') as blame_data:
+            data = json.load(blame_data)
+            self.assertListEqual(final_data, data)
+
+    # def test_override_blame_entry(self):
+    #     print("test_override_blame_entry")
 
 
 class TestParrotBlameWithoutFile(unittest.TestCase):
@@ -125,5 +223,5 @@ class TestParrotBlameWithoutFile(unittest.TestCase):
             }
         ])
 
-    def test_override_blame_entry(self):
-        print("test_override_blame_entry")
+    # def test_override_blame_entry(self):
+    #     print("test_override_blame_entry")
