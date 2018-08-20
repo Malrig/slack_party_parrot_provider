@@ -1,10 +1,13 @@
 [run]
+# Measure branch coverage as well as statement coverage
+branch = True
 source =
-    src
     .
 
 omit =
     *python?.?/*
     *site-packages/nose/*
     *__init__*
-    venv
+    ./venv/*
+    */.virtualenvs/*
+    ./test/*

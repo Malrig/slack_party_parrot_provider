@@ -8,10 +8,17 @@ URL = "https://{team_name}.slack.com/customize/emoji"
 EmojiUploadTask = namedtuple('EmojiUploadTask', [
     "team_name",
     "team_cookie",
+    "username",
     "emoji_url",
     "emoji_name",
     "notify_url"
 ])
+
+
+class UploadError(Exception):
+    def __init__(self, emoji_name: str, message: str):
+        self.emoji_name = emoji_name
+        self.message = message
 
 
 class EmojiUploader:
@@ -54,5 +61,7 @@ class EmojiUploader:
             crumb = soup.find("p", attrs={"class": "alert_error"})
             print("Error with uploading %s: %s" %
                   (self.emoji_name, crumb.text))
+
+            raise UploadError(self.emoji_name, crumb.text)
         else:
-            print("Success")
+            return
