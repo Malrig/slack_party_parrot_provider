@@ -524,5 +524,4 @@ target/
 .env
 .pytest_cache/
 venv/*
-/data/
-!/data/emoji_image_locations.json
+/data/parrot_blame.json
