@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request, abort
 import os
+import sys
 import json
 
 from src.utils.slack_team_config import SlackTeamConfig
 from src.utils.hosting_config import HostingConfig
 from src.party_parrot_provider import PartyParrotProvider
+from src.parrot_blame.parrot_blame import ParrotBlame, ParrotBlameInfo
 
 
 def run_flask_app(hosting_config: HostingConfig,
@@ -18,10 +20,15 @@ def run_flask_app(hosting_config: HostingConfig,
                            'emoji_image_locations.json')) as default_file:
         default_slack_emoji_mapping = json.load(default_file)
 
+    parrot_blame = ParrotBlame(os.path.join(os.path.dirname(sys.modules['__main__'].__file__), "data"))
+
+    @app.route(hosting_config.app_route, methods=['GET'])
     @app.route(hosting_config.app_route + '/hello_world', methods=['GET'])
     def hello_world():
         print("Received command")
-        payload = {"response": "Hello World!"}
+        payload = {
+            "text": "Hello World!"
+        }
 
         return jsonify(payload)
 
@@ -35,9 +42,11 @@ def run_flask_app(hosting_config: HostingConfig,
         party_parrot_provider = PartyParrotProvider(
             request_json['text'],
             request_json['team_domain'],
+            request_json['user_name'],
             request_json['response_url'],
             default_slack_emoji_mapping,
-            slack_team_config
+            slack_team_config,
+            parrot_blame
         )
 
         party_parrot_provider.provide_parrot()
