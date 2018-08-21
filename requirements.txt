@@ -1,4 +1,7 @@
+# Required Modules
 beautifulsoup4
 flask
 python-dotenv
 requests
+# Dev Modules
+freezegun

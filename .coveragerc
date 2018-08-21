@@ -2,7 +2,6 @@
 # Measure branch coverage as well as statement coverage
 branch = True
 source =
-    src
     .
 
 omit =
@@ -10,4 +9,5 @@ omit =
     *site-packages/nose/*
     *__init__*
     ./venv/*
+    */.virtualenvs/*
     ./test/*

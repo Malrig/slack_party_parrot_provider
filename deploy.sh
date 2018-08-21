@@ -54,7 +54,6 @@ if [ -z "commit_id" ]; then
 fi
 
 
-
 ssh -p 22022 $SSH_LOGIN_USERNAME@georgeblackburn.co.uk << EOF
   pwd
   if [[ "$test_deploy" = true ]]; then

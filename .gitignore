@@ -522,5 +522,6 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 .env
-Pipfile.lock
+.pytest_cache/
 venv/*
+/data/parrot_blame.json
