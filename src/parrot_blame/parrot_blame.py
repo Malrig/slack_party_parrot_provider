@@ -82,7 +82,7 @@ class ParrotBlame:
                     (blame_entry["team_id"] == team_id)):
                 return ParrotBlameInfo.from_json(blame_entry)
 
-        raise ValueError("The parrot :{parrot_name}: was not found in the blame information.", parrot_name)
+        raise ValueError("No blame information for :{parrot_name}: was found.", parrot_name)
 
     def _get_parrot_blame_information(self):
         with open(self.parrot_file_path, 'r') as blame_data:
