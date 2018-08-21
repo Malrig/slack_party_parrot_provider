@@ -9,7 +9,7 @@ from src.party_parrot_provider import PartyParrotProvider
 from src.parrot_blame.parrot_blame import ParrotBlame, ParrotBlameInfo
 
 
-def run_flask_app(hosting_config: HostingConfig,
+def get_flask_app(hosting_config: HostingConfig,
                   slack_team_config: SlackTeamConfig,
                   data_dir_path: str):
 
@@ -20,9 +20,9 @@ def run_flask_app(hosting_config: HostingConfig,
                            'emoji_image_locations.json')) as default_file:
         default_slack_emoji_mapping = json.load(default_file)
 
-    parrot_blame = ParrotBlame(os.path.join(os.path.dirname(sys.modules['__main__'].__file__), "data"))
+    parrot_blame = ParrotBlame(data_dir_path)
 
-    @app.route(hosting_config.app_route, methods=['GET'])
+    @app.route(hosting_config.app_route + '/', methods=['GET'])
     @app.route(hosting_config.app_route + '/hello_world', methods=['GET'])
     def hello_world():
         print("Received command")
@@ -57,6 +57,4 @@ def run_flask_app(hosting_config: HostingConfig,
 
         return jsonify(payload)
 
-    app.run(host=hosting_config.host,
-            port=hosting_config.port,
-            debug=hosting_config.debug)
+    return app
