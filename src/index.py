@@ -81,16 +81,14 @@ def get_flask_app(hosting_config: HostingConfig,
             message = message.format(parrot_name=blame_info.parrot_name,
                                      user=blame_info.username,
                                      datetime=blame_info.created_date.strftime("%H:%M:%S %d %b %Y"))
-            response_type = "ephemeral"
+            response_type = "in_channel"
         except ValueError as err:
-            message = str(err)
+            message = err.args[0] % err.args[1]
             response_type = "ephemeral"
 
         return jsonify({
             "response_type": response_type,
             "text": message
         })
-
-
 
     return app
