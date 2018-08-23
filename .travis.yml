@@ -25,9 +25,17 @@ before_deploy:
   - ssh-add /tmp/deploy_rsa
   - chmod a+x ./deploy.sh
 deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-    - ./deploy.sh -c $TRAVIS_COMMIT
-  on:
-    branch: master
+  # deploy develop to the staging environment
+  - provider: script
+    skip_cleanup: true
+    script:
+      - ./deploy.sh -c $TRAVIS_COMMIT -s
+    on:
+      branch: develop
+  # deploy master to production
+  - provider: script
+    skip_cleanup: true
+    script:
+      - ./deploy.sh -c $TRAVIS_COMMIT
+    on:
+      branch: master

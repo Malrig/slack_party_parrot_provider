@@ -1,21 +1,21 @@
-from flask import Flask, jsonify, request, abort
 import os
-import dotenv
-import json
-import time
+import yaml
+import logging
 
-from src.index import get_flask_app
-from src.utils.slack_team_config import SlackTeamConfig
-from src.utils.hosting_config import HostingConfig
+from config import ROOT_DIR, HOST, PORT, DEBUG
+from src.index import app
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-slack_team_config = SlackTeamConfig(dotenv_path)
-hosting_config = HostingConfig(dotenv_path)
-data_dir_path = os.path.join(os.path.dirname(__file__), 'data')
 
-app = get_flask_app(hosting_config, slack_team_config, data_dir_path)
+def setup_logging() -> None:
+    with open(os.path.join(ROOT_DIR, "logging.yaml"), "rt") as log_file:
+        config = yaml.safe_load(log_file.read())
+    logging.config.dictConfig(config)
+
+
+setup_logging()
+
 
 if __name__ == "__main__":
-    app.run(host=hosting_config.host,
-            port=hosting_config.port,
-            debug=hosting_config.debug)
+    app.run(host=HOST,
+            port=PORT,
+            debug=DEBUG)
