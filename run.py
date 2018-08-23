@@ -1,6 +1,6 @@
 import os
 import yaml
-import logging
+import logging.config
 
 from config import ROOT_DIR, HOST, PORT, DEBUG
 from src.index import app
