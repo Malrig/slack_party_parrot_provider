@@ -97,7 +97,7 @@ class TestParrotBlameWithFile(unittest.TestCase):
         with self.assertRaises(ValueError) as val_err:
             self.parrot_blame.blame_parrot(":not_like_this_parrot:", "T001")
 
-        self.assertEqual("('No blame information for :{parrot_name}: was found.', "
+        self.assertEqual("('No blame information for :%s: was found.', "
                          "'not_like_this_parrot')",
                          str(val_err.exception))
 
@@ -105,7 +105,7 @@ class TestParrotBlameWithFile(unittest.TestCase):
         with self.assertRaises(ValueError) as val_err:
             self.parrot_blame.blame_parrot(":joy_parrot:", "T003")
 
-        self.assertEqual("('No blame information for :{parrot_name}: was found.', 'joy_parrot')",
+        self.assertEqual("('No blame information for :%s: was found.', 'joy_parrot')",
                          str(val_err.exception))
 
     @freeze_time("2018-08-03")
@@ -183,7 +183,7 @@ class TestParrotBlameWithoutFile(unittest.TestCase):
             self.parrot_blame.blame_parrot(":not_like_this_parrot:", "T001")
 
         self.parrot_blame._get_parrot_blame_information.assert_called()
-        self.assertEqual("('No blame information for :{parrot_name}: was found.', "
+        self.assertEqual("('No blame information for :%s: was found.', "
                          "'not_like_this_parrot')",
                          str(val_err.exception))
 
@@ -192,7 +192,7 @@ class TestParrotBlameWithoutFile(unittest.TestCase):
             self.parrot_blame.blame_parrot(":joy_parrot:", "T003")
 
         self.parrot_blame._get_parrot_blame_information.assert_called()
-        self.assertEqual("('No blame information for :{parrot_name}: was found.', 'joy_parrot')",
+        self.assertEqual("('No blame information for :%s: was found.', 'joy_parrot')",
                          str(val_err.exception))
 
     @freeze_time("2018-08-03")

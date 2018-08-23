@@ -67,4 +67,6 @@ ssh -p 22022 $SSH_LOGIN_USERNAME@georgeblackburn.co.uk << EOF
   git checkout $commit_id
   source slack_party_parrot_provider_env/bin/activate
   pip install -r requirements.txt
+
+  touch run.py
 EOF
