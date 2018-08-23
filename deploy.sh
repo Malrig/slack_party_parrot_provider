@@ -10,7 +10,7 @@ set -e
 
 # Set up local variables
 commit_id=""
-test_deploy=false
+staging_deploy=false
 
 while :; do
   case $1 in
@@ -33,9 +33,9 @@ while :; do
       break
       ;;
 
-    -t|--test)
+    -s|--staging)
       echo "Deploy to the test directory"
-      test_deploy=true
+      staging_deploy=true
       ;;
 
     -?*)
@@ -56,7 +56,7 @@ fi
 
 ssh -p 22022 $SSH_LOGIN_USERNAME@georgeblackburn.co.uk << EOF
   pwd
-  if [[ "$test_deploy" = true ]]; then
+  if [[ "$staging_deploy" = true ]]; then
     cd /var/WebApps/slack_party_parrot_provider_test/
   else
     cd /var/WebApps/slack_party_parrot_provider/
