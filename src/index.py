@@ -4,7 +4,7 @@ import json
 
 from config import ROOT_DIR, APP_ROUTE, VERIFICATION_TOKEN
 from src.party_parrot_provider import PartyParrotProvider
-from src.parrot_blame.parrot_blame import ParrotBlame, ParrotBlameInfo
+from src.parrot_blame.parrot_blame import ParrotBlame
 
 app = Flask(__name__)
 
