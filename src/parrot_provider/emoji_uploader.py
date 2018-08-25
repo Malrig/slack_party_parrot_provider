@@ -16,14 +16,14 @@ EmojiUploadTask = namedtuple('EmojiUploadTask', [
 
 
 class UploadError(Exception):
-    def __init__(self, emoji_name: str, message: str):
+    def __init__(self, emoji_name: str, message: str) -> None:
         self.emoji_name = emoji_name
         self.message = message
 
 
 class EmojiUploader:
     def __init__(self,
-                 emoji_upload_task: EmojiUploadTask):
+                 emoji_upload_task: EmojiUploadTask) -> None:
         self.emoji_url = emoji_upload_task.emoji_url
         self.emoji_name = emoji_upload_task.emoji_name
         self.team_cookie = emoji_upload_task.team_cookie

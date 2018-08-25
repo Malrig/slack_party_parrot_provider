@@ -1,4 +1,5 @@
 import requests
+import typing
 
 BASE_EMOJI_URL = "https://unicodey.com/emoji-data/img-google-64/{image_link}"
 EMOJI_API_URL = "https://slack.com/api/emoji.list?token={oauth_token}"
@@ -6,11 +7,11 @@ EMOJI_API_URL = "https://slack.com/api/emoji.list?token={oauth_token}"
 
 class EmojiUrlGenerator:
     def __init__(self,
-                 default_emoji_list: object,
-                 oauth_token: str):
+                 default_emoji_list: typing.List,
+                 oauth_token: str) -> None:
         self.default_emoji_list = default_emoji_list
         self.oauth_token = oauth_token
-        
+
     def _get_custom_emoji_dict(self):
         response = requests.get(EMOJI_API_URL.format(oauth_token=self.oauth_token))
 
