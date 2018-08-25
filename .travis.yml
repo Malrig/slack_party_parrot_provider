@@ -8,7 +8,6 @@ addons:
   ssh_known_hosts: georgeblackburn.co.uk:22022
 os:
   - linux
-# command to install dependencies
 install:
   - pip install -r requirements.txt
   # Pacakages required for unit tests
@@ -18,7 +17,7 @@ install:
 jobs:
   include:
     - stage: "Tests and Linting"
-      name: "Unit Tests"
+    - name: "Unit Tests"
       script: coverage run -m unittest discover
       after_success: coveralls
     - name: "Linting"
@@ -26,7 +25,7 @@ jobs:
       - mypy .
       - flake8
     - stage: "Deploy"
-      name: "Deploy to Live"
+    - name: "Deploy to Live"
       if: branch = master
       before_deploy:
         - openssl aes-256-cbc -K $encrypted_8af44c9d6bfb_key -iv $encrypted_8af44c9d6bfb_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
@@ -42,7 +41,7 @@ jobs:
           on:
             branch: master
     - name: "Deploy to Staging"
-      if: branch = develop
+#      if: branch = develop
       before_deploy:
         - openssl aes-256-cbc -K $encrypted_8af44c9d6bfb_key -iv $encrypted_8af44c9d6bfb_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
         - chmod 600 /tmp/deploy_rsa
