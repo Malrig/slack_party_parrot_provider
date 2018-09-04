@@ -1,4 +1,4 @@
-from src.utils.slack_team_config import SlackTeamConfig
+from config import OAUTH_ACCESS_TOKEN, TEAM_COOKIE
 from src.parrot_provider.emoji_url_generator import EmojiUrlGenerator
 from src.parrot_provider.parrot_url_generator import ParrotUrlGenerator
 from src.parrot_provider.emoji_uploader import EmojiUploadTask
@@ -13,8 +13,7 @@ class PartyParrotProvider:
                  username: str,
                  notify_url: str,
                  default_slack_emoji_mapping: dict,
-                 slack_team_config: SlackTeamConfig,
-                 parrot_blame: ParrotBlame):
+                 parrot_blame: ParrotBlame) -> None:
         self.slack_text = slack_text
         self.team_name = team_name
         self.username = username
@@ -22,7 +21,6 @@ class PartyParrotProvider:
         self.original_emoji_name = None
         self.new_emoji_name = None
         self.default_slack_emoji_mapping = default_slack_emoji_mapping
-        self.slack_team_config = slack_team_config
         self.task_queue = TaskQueue(parrot_blame, num_workers=1)
 
     def _parse_and_validate_input(self):
@@ -39,7 +37,7 @@ class PartyParrotProvider:
 
         # Get the URL to the original emoji
         emoji_url_generator = EmojiUrlGenerator(self.default_slack_emoji_mapping,
-                                                self.slack_team_config.oauth_access_token)
+                                                OAUTH_ACCESS_TOKEN)
         original_emoji_url = emoji_url_generator.get_emoji_url(self.original_emoji_name)
 
         # Create the URL for the parrot
@@ -48,7 +46,7 @@ class PartyParrotProvider:
 
         self.task_queue.put(EmojiUploadTask(
             team_name=self.team_name,
-            team_cookie=self.slack_team_config.team_cookie,
+            team_cookie=TEAM_COOKIE,
             username=self.username,
             emoji_url=parrot_url,
             emoji_name=self.new_emoji_name,

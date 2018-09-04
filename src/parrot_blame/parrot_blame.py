@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class ParrotBlameInfo:
-    def __init__(self, parrot_name: str, username: str, created_date: datetime, team_id: str):
+    def __init__(self, parrot_name: str, username: str, created_date: datetime, team_id: str) -> None:
         self.parrot_name = parrot_name
         self.username = username
         self.created_date = created_date
@@ -39,7 +39,7 @@ class ParrotBlameInfo:
 
 class ParrotBlame:
     def __init__(self,
-                 data_dir_path: str):
+                 data_dir_path: str) -> None:
         self._prepare_blame_file(data_dir_path)
         self.parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
 
@@ -82,7 +82,7 @@ class ParrotBlame:
                     (blame_entry["team_id"] == team_id)):
                 return ParrotBlameInfo.from_json(blame_entry)
 
-        raise ValueError("No blame information for :{parrot_name}: was found.", parrot_name)
+        raise ValueError("No blame information for :%s: was found.", parrot_name)
 
     def _get_parrot_blame_information(self):
         with open(self.parrot_file_path, 'r') as blame_data:

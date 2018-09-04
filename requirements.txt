@@ -1,7 +1,6 @@
 # Required Modules
-beautifulsoup4
-flask
-python-dotenv
-requests
-# Dev Modules
-freezegun
+PyYAML==3.12
+beautifulsoup4==4.6.0
+Flask==1.0.2
+python-dotenv==0.8.2
+requests==2.19.1
