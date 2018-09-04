@@ -17,7 +17,7 @@ class PartyParrotProvider:
                  username: str,
                  notify_url: str,
                  default_slack_emoji_mapping: dict,
-                 parrot_blame: ParrotBlame):
+                 parrot_blame: ParrotBlame) -> None:
         self.slack_text = slack_text
         self.team_name = team_name
         self.username = username

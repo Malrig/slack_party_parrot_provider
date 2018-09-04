@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class ParrotBlameInfo:
-    def __init__(self, parrot_name: str, username: str, created_date: datetime, team_id: str):
+    def __init__(self, parrot_name: str, username: str, created_date: datetime, team_id: str) -> None:
         self.parrot_name = parrot_name
         self.username = username
         self.created_date = created_date
@@ -39,7 +39,7 @@ class ParrotBlameInfo:
 
 class ParrotBlame:
     def __init__(self,
-                 data_dir_path: str):
+                 data_dir_path: str) -> None:
         self._prepare_blame_file(data_dir_path)
         self.parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
 

@@ -6,7 +6,7 @@ from src.parrot_blame.parrot_blame import ParrotBlame
 
 
 class TaskQueue(queue.Queue):
-    def __init__(self, parrot_blame: ParrotBlame, num_workers: int = 1):
+    def __init__(self, parrot_blame: ParrotBlame, num_workers: int = 1) -> None:
         queue.Queue.__init__(self)
         self.parrot_blame = parrot_blame
         self.num_workers = num_workers
