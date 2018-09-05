@@ -1,6 +1,9 @@
 import json
 import os
+import logging
 from datetime import datetime
+
+logger = logging.getLogger()
 
 
 class ParrotBlameInfo:
@@ -13,6 +16,7 @@ class ParrotBlameInfo:
     @classmethod
     def from_json(cls, json_entry: dict):
         if not all(key in json_entry for key in("parrot_name", "username", "created_date", "team_id")):
+            logger.error("Failed to create ParrotBlameInfo from dictionary: %s.", json_entry)
             raise ValueError("Dictionary did not contain one of; parrot_name, username, created_date or team_id.")
         return ParrotBlameInfo(json_entry["parrot_name"],
                                json_entry["username"],
@@ -45,14 +49,17 @@ class ParrotBlame:
 
     @staticmethod
     def _prepare_blame_file(data_dir_path: str):
+        logger.debug("Preparing blame data file at %s.", data_dir_path)
         parrot_file_path = os.path.join(data_dir_path, "parrot_blame.json")
 
         os.makedirs(os.path.dirname(parrot_file_path), exist_ok=True)
 
         if os.path.isfile(parrot_file_path):
+            logger.debug("Existing blame file found, do not recreate.")
             return
 
         with open(parrot_file_path, 'w+') as new_json_file:
+            logger.debug("No existing blame file found, create a new one.")
             json.dump([], new_json_file)
 
     def add_parrot_blame_information(self,
@@ -60,6 +67,7 @@ class ParrotBlame:
                                      username: str,
                                      team_id: str):
         parrot_name = parrot_name.replace(":", "")
+        logger.debug("Adding blame information for parrot %s.", parrot_name)
 
         current_info = self._get_parrot_blame_information()
 
@@ -74,12 +82,14 @@ class ParrotBlame:
                      parrot_name: str,
                      team_id: str):
         parrot_name = parrot_name.replace(":", "")
+        logger.debug("Getting blame information for parrot %s.", parrot_name)
 
         blame_info = self._get_parrot_blame_information()
 
         for blame_entry in blame_info:
             if ((blame_entry["parrot_name"] == parrot_name) and
                     (blame_entry["team_id"] == team_id)):
+                logger.debug("Found blame entry for parrot %s: %s.", parrot_name, blame_entry)
                 return ParrotBlameInfo.from_json(blame_entry)
 
         raise ValueError("No blame information for :%s: was found.", parrot_name)

@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, request, abort
 import os
 import json
+import logging
 
 from config import ROOT_DIR, APP_ROUTE, VERIFICATION_TOKEN
 from src.party_parrot_provider import PartyParrotProvider
 from src.parrot_blame.parrot_blame import ParrotBlame
 
 app = Flask(__name__)
+logger = logging.getLogger(__name__)
 
 with open(os.path.join(ROOT_DIR, "data", "emoji_image_locations.json")) as default_file:
     default_slack_emoji_mapping = json.load(default_file)
@@ -35,6 +37,8 @@ def produce_party_parrot():
 
     request_json = request.form.to_dict()
 
+    logger.info("/produce_party_parrot received with data: %s.", request_json)
+
     party_parrot_provider = PartyParrotProvider(
         request_json['text'],
         request_json['team_domain'],
@@ -56,6 +60,8 @@ def produce_party_parrot():
         'text': message
     }
 
+    logger.info("/produce_party_parrot reply to request: %s with: %s.", request_json, payload)
+
     return jsonify(payload)
 
 
@@ -65,6 +71,8 @@ def parrot_blame():
         return abort(400)
 
     request_json = request.form.to_dict()
+
+    logger.info("/parrot_blame received with data: %s.", request_json)
 
     try:
         blame_info = parrot_blame_object.blame_parrot(request_json['text'], request_json['team_domain'])
@@ -82,7 +90,11 @@ def parrot_blame():
         message = str(err)
         response_type = "ephemeral"
 
-    return jsonify({
+    payload = {
         "response_type": response_type,
         "text": message
-    })
+    }
+
+    logger.info("/parrot_blame reply to request: %s with: %s.", request_json, payload)
+
+    return jsonify(payload)
