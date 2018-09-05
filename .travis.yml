@@ -40,7 +40,7 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
-        script: ./deploy.sh -c $TRAVIS_COMMIT -s
+        script: ./deploy.sh -c $TRAVIS_COMMIT
         on:
           branch: master
 
