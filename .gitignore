@@ -525,3 +525,4 @@ target/
 .pytest_cache/
 venv/*
 /data/parrot_blame.json
+/.mypy_cache/

@@ -129,4 +129,3 @@ class TestEmojiUrlGenerator(unittest.TestCase):
         mock_get.assert_called_with('https://slack.com/api/emoji.list?token=OAUTH_STRING')
         self.assertEqual("No emoji found for :{emoji_name}:".format(emoji_name="emoji_which_doesnt_exist"),
                          str(val_err.exception))
-

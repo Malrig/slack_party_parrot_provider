@@ -1,4 +1,5 @@
 import requests
+import logging
 from io import BytesIO
 from bs4 import BeautifulSoup
 from collections import namedtuple
@@ -14,16 +15,18 @@ EmojiUploadTask = namedtuple('EmojiUploadTask', [
     "notify_url"
 ])
 
+logger = logging.getLogger()
+
 
 class UploadError(Exception):
-    def __init__(self, emoji_name: str, message: str):
+    def __init__(self, emoji_name: str, message: str) -> None:
         self.emoji_name = emoji_name
         self.message = message
 
 
 class EmojiUploader:
     def __init__(self,
-                 emoji_upload_task: EmojiUploadTask):
+                 emoji_upload_task: EmojiUploadTask) -> None:
         self.emoji_url = emoji_upload_task.emoji_url
         self.emoji_name = emoji_upload_task.emoji_name
         self.team_cookie = emoji_upload_task.team_cookie
@@ -31,6 +34,7 @@ class EmojiUploader:
         self.session = self._session()
 
     def _session(self):
+        logger.log("Set up session for EmojiUploader.")
         session = requests.session()
         session.headers = {"Cookie": self.team_cookie}
         session.url = URL.format(team_name=self.team_name)
@@ -59,9 +63,9 @@ class EmojiUploader:
         if b'alert_error' in r.content:
             soup = BeautifulSoup(r.text, "html.parser")
             crumb = soup.find("p", attrs={"class": "alert_error"})
-            print("Error with uploading %s: %s" %
-                  (self.emoji_name, crumb.text))
+            logger.log("Hit error when uploading emoji to slack %s: %s.", self.emoji_name, crumb.text)
 
             raise UploadError(self.emoji_name, crumb.text)
         else:
+            logger.log("Successfully uploaded emoji %s.", self.emoji_name)
             return

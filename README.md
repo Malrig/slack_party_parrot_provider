@@ -28,6 +28,10 @@ pip install -r requirements.txt
 Then start the app using `python run.py` which should start it at `http://localhost:5000`, you should be able to test that it is up and running by visiting `http://localhost:5000/hello_world`.
 
 ### Running unit tests
+Before you run the tests you need install the test dependencies:
+```
+pip install freezegun
+```
 You can run the unit tests using any test runner you wish. To use the inbuilt runner use `python -m unittest discover`.
 
 ### Configuration required

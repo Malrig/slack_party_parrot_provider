@@ -8,26 +8,50 @@ addons:
   ssh_known_hosts: georgeblackburn.co.uk:22022
 os:
   - linux
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-  - pip install coverage
-  - pip install coveralls
-# command to run tests
-script:
-  - coverage run -m unittest discover
-after_success:
-  - coveralls
+
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_8af44c9d6bfb_key -iv $encrypted_8af44c9d6bfb_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
   - chmod 600 /tmp/deploy_rsa
   - eval "$(ssh-agent -s)"
   - ssh-add /tmp/deploy_rsa
   - chmod a+x ./deploy.sh
-deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-    - ./deploy.sh -c $TRAVIS_COMMIT
-  on:
-    branch: master
+
+jobs:
+  include:
+    - stage: "Tests and Linting"
+      name: "Unit Tests"
+      install:
+        - pip install -r requirements.txt
+        - pip install freezegun coverage coveralls
+      script: coverage run -m unittest discover
+      after_success: coveralls
+    - name: "Linting"
+      install:
+        - pip install -r requirements.txt
+        - pip install mypy flake8
+      script:
+        - mypy .
+        - flake8
+
+    - stage: "Deploy"
+      name: "Deploy to Live"
+      if: branch = master
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: ./deploy.sh -c $TRAVIS_COMMIT -s
+        on:
+          branch: master
+
+    - stage: "Deploy"
+      name: "Deploy to Staging"
+      if: branch = develop
+      script: skip
+      deploy:
+        # deploy develop to the staging environment
+        provider: script
+        skip_cleanup: true
+        script: ./deploy.sh -c $TRAVIS_COMMIT -s
+        on:
+          branch: develop
