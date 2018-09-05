@@ -1,8 +1,11 @@
 from threading import Thread
 import queue
 import requests
+import logging
 from src.parrot_provider.emoji_uploader import EmojiUploader, EmojiUploadTask, UploadError
 from src.parrot_blame.parrot_blame import ParrotBlame
+
+logger = logging.getLogger()
 
 
 class TaskQueue(queue.Queue):
@@ -15,6 +18,7 @@ class TaskQueue(queue.Queue):
     def add_task(self, task, *args, **kwargs):
         args = args or ()
         kwargs = kwargs or {}
+        logger.debug("Adding task to task queue.")
         self.put((task, args, kwargs))
 
     def start_workers(self):
@@ -26,16 +30,19 @@ class TaskQueue(queue.Queue):
     def worker(self):
         while True:
             emoji_upload_task = EmojiUploadTask(*self.get())
+            logger.debug("Getting task.")
 
             uploader = EmojiUploader(emoji_upload_task)
 
             try:
+                logger.debug("Attempting to upload the emoji.")
                 uploader.upload_emoji()
             except UploadError as err:
                 message = "Hit an error whilst uploading the emoji :{emoji_name}:: {message}"
                 message = message.format(emoji_name=err.emoji_name, message=err.message)
                 response_type = "ephemeral"
             else:
+                logger.debug("Emoji has been uploaded successfully.")
                 message = "\n:{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
                           ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
                           ":{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}::{emoji_name}:"\
