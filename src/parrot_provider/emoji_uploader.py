@@ -34,7 +34,7 @@ class EmojiUploader:
         self.session = self._session()
 
     def _session(self):
-        logger.log("Set up session for EmojiUploader.")
+        logger.debug("Set up session for EmojiUploader.")
         session = requests.session()
         session.headers = {"Cookie": self.team_cookie}
         session.url = URL.format(team_name=self.team_name)
@@ -63,9 +63,9 @@ class EmojiUploader:
         if b'alert_error' in r.content:
             soup = BeautifulSoup(r.text, "html.parser")
             crumb = soup.find("p", attrs={"class": "alert_error"})
-            logger.log("Hit error when uploading emoji to slack %s: %s.", self.emoji_name, crumb.text)
+            logger.debug("Hit error when uploading emoji to slack %s: %s.", self.emoji_name, crumb.text)
 
             raise UploadError(self.emoji_name, crumb.text)
         else:
-            logger.log("Successfully uploaded emoji %s.", self.emoji_name)
+            logger.debug("Successfully uploaded emoji %s.", self.emoji_name)
             return

@@ -29,7 +29,7 @@ class PartyParrotProvider:
 
     def _parse_and_validate_input(self):
         # TODO Need to do some validation of the text sent from Slack
-        logger.log("Validate text '%s' to extract parrot.", self.slack_text)
+        logger.debug("Validate text '%s' to extract parrot.", self.slack_text)
 
         # Now assign the parameters
         self.original_emoji_name = self.slack_text.replace(":", "")
