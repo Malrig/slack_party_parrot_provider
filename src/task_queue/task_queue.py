@@ -40,6 +40,11 @@ class TaskQueue(queue.Queue):
             except UploadError as err:
                 message = "Hit an error whilst uploading the emoji :{emoji_name}:: {message}"
                 message = message.format(emoji_name=err.emoji_name, message=err.message)
+                logger.warning(message)
+                response_type = "ephemeral"
+            except Exception:
+                message = "Hit an unhandled exception whilst uploading the emoji."
+                logger.exception("Hit an unhandled exception when uploading the emoji.")
                 response_type = "ephemeral"
             else:
                 logger.debug("Emoji has been uploaded successfully.")
