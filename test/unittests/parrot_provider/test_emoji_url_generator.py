@@ -58,20 +58,20 @@ default_emoji_dict = [
 custom_emoji_dict = {
     "ok": True,
     "emoji": {
-        "bowtie": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/bowtie\/f3ec6f2bb0.png",
-        "squirrel": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/squirrel\/465f40c0e0.png",
-        "glitch_crab": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/glitch_crab\/db049f1f9c.png",
-        "piggy": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/piggy\/b7762ee8cd.png",
-        "cubimal_chick": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/cubimal_chick\/85961c43d7.png",
-        "dusty_stick": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/dusty_stick\/6177a62312.png",
-        "slack": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/slack\/5ee0c9bea3.png",
-        "pride": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/pride\/56b1bd3388.png",
-        "thumbsup_all": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/thumbsup_all\/50096a1020.gif",
-        "slack_call": "https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/slack_call\/b81fffd6dd.png",
+        "bowtie": "https://emoji.slack-edge.com/TBF3XA5LP/bowtie/f3ec6f2bb0.png",
+        "squirrel": "https://emoji.slack-edge.com/TBF3XA5LP/squirrel/465f40c0e0.png",
+        "glitch_crab": "https://emoji.slack-edge.com/TBF3XA5LP/glitch_crab/db049f1f9c.png",
+        "piggy": "https://emoji.slack-edge.com/TBF3XA5LP/piggy/b7762ee8cd.png",
+        "cubimal_chick": "https://emoji.slack-edge.com/TBF3XA5LP/cubimal_chick/85961c43d7.png",
+        "dusty_stick": "https://emoji.slack-edge.com/TBF3XA5LP/dusty_stick/6177a62312.png",
+        "slack": "https://emoji.slack-edge.com/TBF3XA5LP/slack/5ee0c9bea3.png",
+        "pride": "https://emoji.slack-edge.com/TBF3XA5LP/pride/56b1bd3388.png",
+        "thumbsup_all": "https://emoji.slack-edge.com/TBF3XA5LP/thumbsup_all/50096a1020.gif",
+        "slack_call": "https://emoji.slack-edge.com/TBF3XA5LP/slack_call/b81fffd6dd.png",
         "shipit": "alias:squirrel",
         "white_square": "alias:white_large_square",
         "black_square": "alias:black_large_square",
-        "simple_smile": "https:\/\/a.slack-edge.com\/21511\/img\/emoji_2017_12_06\/apple\/simple_smile.png"
+        "simple_smile": "https://a.slack-edge.com/21511/img/emoji_2017_12_06/apple/simple_smile.png"
     }
 }
 
@@ -118,7 +118,7 @@ class TestEmojiUrlGenerator(unittest.TestCase):
     def test_custom_emoji_case(self, mock_get):
         emoji_url = self.emoji_url_generator.get_emoji_url(":squirrel:")
 
-        self.assertEqual("https:\/\/emoji.slack-edge.com\/TBF3XA5LP\/squirrel\/465f40c0e0.png",
+        self.assertEqual("https://emoji.slack-edge.com/TBF3XA5LP/squirrel/465f40c0e0.png",
                          emoji_url)
         mock_get.assert_called_with('https://slack.com/api/emoji.list?token=OAUTH_STRING')
 
