@@ -16,7 +16,7 @@ with open(os.path.join(ROOT_DIR, "data", "emoji_image_locations.json")) as defau
 parrot_blame_object = ParrotBlame(os.path.join(ROOT_DIR, "data"))
 
 
-def verify_slack_request(to_verify: request) -> bool:
+def verify_slack_request(to_verify) -> bool:
     return to_verify.form['token'] == VERIFICATION_TOKEN
 
 
